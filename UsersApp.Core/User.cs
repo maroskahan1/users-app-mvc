@@ -9,15 +9,26 @@
 
 namespace UsersApp.Core
 {
-    using System;
-    using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class User
     {
         public int ID { get; set; }
+
+        [Required(ErrorMessage = "First name is required!")]
+        [MaxLength(UserConsts.FirstNameMaxLength, ErrorMessage="First name is too long!")]
         public string FirstName { get; set; }
+
+        [Required(ErrorMessage = "Last name is required!")]
+        [MaxLength(UserConsts.LastNameMaxLength, ErrorMessage = "Last name is too long!")]
         public string LastName { get; set; }
+
+        [Required(ErrorMessage = "Login is required!")]
+        [MaxLength(UserConsts.LoginMaxLength, ErrorMessage = "Login is too long!")]
         public string Login { get; set; }
+
+        [Required(ErrorMessage = "Password is required!")]
+        [MaxLength(UserConsts.PasswordMaxLength, ErrorMessage = "Password is too long!")]
         public string Password { get; set; }
     }
 }

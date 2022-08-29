@@ -55,6 +55,7 @@
     <Compile Include="User.cs">
       <DependentUpon>UserModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="UserConsts.cs" />
     <Compile Include="UserModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
