@@ -34,7 +34,7 @@ namespace UsersApp.Infrastructure
             return _db.Users;
         }
 
-        public User GetUserById(int userId)
+        public User GetUserById(int? userId)
         {
             return _db.Users.Find(userId);
         }
@@ -42,6 +42,7 @@ namespace UsersApp.Infrastructure
         public void Update(User user)
         {
             _db.Entry(user).State = System.Data.Entity.EntityState.Modified;
+            _db.SaveChanges();
         }
     }
 }

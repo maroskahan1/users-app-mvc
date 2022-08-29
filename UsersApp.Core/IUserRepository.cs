@@ -12,6 +12,6 @@ namespace UsersApp.Core
         void Update(User user);
         void Delete(int userId);
         IEnumerable<User> GetAllUsers();
-        User GetUserById(int userId);
+        User GetUserById(int? userId);
     }
 }

@@ -7,17 +7,23 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using UsersApp.Core;
+using UsersApp.Infrastructure;
 
 namespace UsersApp.UI.Controllers
 {
     public class UserController : Controller
     {
-        private UserEntities db = new UserEntities();
+        private readonly IUserRepository _userRepository;
+
+        public UserController(IUserRepository userRepository)
+        {
+            _userRepository = userRepository;
+        }
 
         // GET: User
         public ActionResult Index()
         {
-            return View(db.Users.ToList());
+            return View(_userRepository.GetAllUsers());
         }
 
         // GET: User/Details/5
@@ -27,7 +33,7 @@ namespace UsersApp.UI.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            User user = db.Users.Find(id);
+            User user = _userRepository.GetUserById(id);
             if (user == null)
             {
                 return HttpNotFound();
@@ -50,8 +56,7 @@ namespace UsersApp.UI.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Users.Add(user);
-                db.SaveChanges();
+                _userRepository.Create(user);
                 return RedirectToAction("Index");
             }
 
@@ -65,7 +70,7 @@ namespace UsersApp.UI.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            User user = db.Users.Find(id);
+            User user = _userRepository.GetUserById(id);
             if (user == null)
             {
                 return HttpNotFound();
@@ -82,8 +87,7 @@ namespace UsersApp.UI.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(user).State = EntityState.Modified;
-                db.SaveChanges();
+                _userRepository.Update(user);
                 return RedirectToAction("Index");
             }
             return View(user);
@@ -96,7 +100,9 @@ namespace UsersApp.UI.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            User user = db.Users.Find(id);
+
+            User user = _userRepository.GetUserById(id);
+
             if (user == null)
             {
                 return HttpNotFound();
@@ -109,19 +115,8 @@ namespace UsersApp.UI.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            User user = db.Users.Find(id);
-            db.Users.Remove(user);
-            db.SaveChanges();
+            _userRepository.Delete(id);
             return RedirectToAction("Index");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 }
