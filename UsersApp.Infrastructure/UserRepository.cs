@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UsersApp.Core;
 
 namespace UsersApp.Infrastructure
@@ -18,6 +16,11 @@ namespace UsersApp.Infrastructure
 
         public void Create(User user)
         {
+            if(_db.Users.Any(x => x.Login == user.Login))
+            {
+                throw new ArgumentException($"Login '{user.Login}' is already taken!");
+            }
+
             _db.Users.Add(user);
             _db.SaveChanges();
         }
@@ -41,7 +44,14 @@ namespace UsersApp.Infrastructure
 
         public void Update(User user)
         {
-            _db.Entry(user).State = System.Data.Entity.EntityState.Modified;
+            var oldUser = _db.Users.First(x => x.ID == user.ID);
+
+            if (oldUser.Login != user.Login && _db.Users.Any(x => user.Login == x.Login))
+            {
+                throw new ArgumentException($"Login '{user.Login}' is already taken!");
+            }
+
+            _db.Entry(oldUser).CurrentValues.SetValues(user);
             _db.SaveChanges();
         }
     }
