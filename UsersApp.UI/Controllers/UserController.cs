@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using UsersApp.Core;
-using UsersApp.Infrastructure;
 
 namespace UsersApp.UI.Controllers
 {
@@ -56,8 +50,17 @@ namespace UsersApp.UI.Controllers
         {
             if (ModelState.IsValid)
             {
-                _userRepository.Create(user);
-                return RedirectToAction("Index");
+                try
+                {
+                    _userRepository.Create(user);
+                    TempData["AlertMessage"] = "User Created Successfully!";
+                    return RedirectToAction("Index");
+                }
+                catch(Exception e)
+                {
+                    TempData["AlertMessage"] = e.Message;
+                    return View(user);
+                }
             }
 
             return View(user);
@@ -87,8 +90,17 @@ namespace UsersApp.UI.Controllers
         {
             if (ModelState.IsValid)
             {
-                _userRepository.Update(user);
-                return RedirectToAction("Index");
+                try
+                {
+                    _userRepository.Update(user);
+                    TempData["AlertMessage"] = "User Updated Successfully!";
+                    return RedirectToAction("Index");
+                } 
+                catch (Exception e)
+                {
+                    TempData["AlertMessage"] = e.Message;
+                    return View(user);
+                }
             }
             return View(user);
         }
@@ -102,7 +114,7 @@ namespace UsersApp.UI.Controllers
             }
 
             User user = _userRepository.GetUserById(id);
-
+            
             if (user == null)
             {
                 return HttpNotFound();
@@ -116,6 +128,7 @@ namespace UsersApp.UI.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             _userRepository.Delete(id);
+            TempData["AlertMessage"] = "User Deleted Successfully!";
             return RedirectToAction("Index");
         }
     }
