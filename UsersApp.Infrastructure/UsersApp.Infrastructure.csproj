@@ -42,6 +42,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserRepository.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UsersApp.Core\UsersApp.Core.csproj">
+      <Project>{9325b235-99e3-4a20-8aa8-ddc88af1dd2c}</Project>
+      <Name>UsersApp.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
